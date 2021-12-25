@@ -1,0 +1,179 @@
+{
+  "draft_kings_result": [
+    {
+      "game_id": "24115947",
+      "spread": {
+        "visitor": {
+          "team": "ATL Hawks",
+          "odds": "-115",
+          "line": 7
+        },
+        "home": {
+          "team": "NY Knicks",
+          "odds": "-105",
+          "line": -7
+        }
+      },
+      "total": {
+        "over": {
+          "odds": "-110",
+          "line": 209
+        },
+        "under": {
+          "odds": "-110",
+          "line": 209
+        }
+      },
+      "money_line": {
+        "visitor": {
+          "team": "ATL Hawks",
+          "odds": "+230"
+        },
+        "home": {
+          "team": "NY Knicks",
+          "odds": "-290"
+        }
+      }
+    },
+    {
+      "game_id": "24115948",
+      "spread": {
+        "visitor": {
+          "team": "BOS Celtics",
+          "odds": "-110",
+          "line": 7
+        },
+        "home": {
+          "team": "MIL Bucks",
+          "odds": "-110",
+          "line": -7
+        }
+      },
+      "total": {
+        "over": {
+          "odds": "-110",
+          "line": 221
+        },
+        "under": {
+          "odds": "-110",
+          "line": 221
+        }
+      },
+      "money_line": {
+        "visitor": {
+          "team": "BOS Celtics",
+          "odds": "+220"
+        },
+        "home": {
+          "team": "MIL Bucks",
+          "odds": "-275"
+        }
+      }
+    },
+    {
+      "game_id": "24115950",
+      "spread": {
+        "visitor": {
+          "team": "GS Warriors",
+          "odds": "-110",
+          "line": 6
+        },
+        "home": {
+          "team": "PHO Suns",
+          "odds": "-110",
+          "line": -6
+        }
+      },
+      "total": {
+        "over": {
+          "odds": "-110",
+          "line": 215.5
+        },
+        "under": {
+          "odds": "-110",
+          "line": 215.5
+        }
+      },
+      "money_line": {
+        "visitor": {
+          "team": "GS Warriors",
+          "odds": "+195"
+        },
+        "home": {
+          "team": "PHO Suns",
+          "odds": "-240"
+        }
+      }
+    },
+    {
+      "game_id": "24115951",
+      "spread": {
+        "visitor": {
+          "team": "BKN Nets",
+          "odds": "-105",
+          "line": 1.5
+        },
+        "home": {
+          "team": "LA Lakers",
+          "odds": "-115",
+          "line": -1.5
+        }
+      },
+      "total": {
+        "over": {
+          "odds": "-115",
+          "line": 224.5
+        },
+        "under": {
+          "odds": "-105",
+          "line": 224.5
+        }
+      },
+      "money_line": {
+        "visitor": {
+          "team": "BKN Nets",
+          "odds": "+105"
+        },
+        "home": {
+          "team": "LA Lakers",
+          "odds": "-125"
+        }
+      }
+    },
+    {
+      "game_id": "24115952",
+      "spread": {
+        "visitor": {
+          "team": "DAL Mavericks",
+          "odds": "-110",
+          "line": 12.5
+        },
+        "home": {
+          "team": "UTA Jazz",
+          "odds": "-110",
+          "line": -12.5
+        }
+      },
+      "total": {
+        "over": {
+          "odds": "-115",
+          "line": 214
+        },
+        "under": {
+          "odds": "-105",
+          "line": 214
+        }
+      },
+      "money_line": {
+        "visitor": {
+          "team": "DAL Mavericks",
+          "odds": "+600"
+        },
+        "home": {
+          "team": "UTA Jazz",
+          "odds": "-900"
+        }
+      }
+    }
+  ]
+}
