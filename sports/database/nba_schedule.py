@@ -1,11 +1,12 @@
 import database.db as db
 import draftkings.draftkings_client as dk
 import model.OverUnder as overUnder
+import datetime
 
 TABLE = 'DK_TOTALS'
-CREATE_STATEMENT = '''
-        CREATE TABLE DK_TOTALS (
-            [game_id] INTEGER PRIMARY KEY,
+CREATE_STATEMENT = '''CREATE TABLE DK_TOTALS (
+            [event_id] INTEGER PRIMARY KEY AUTOINCREMENT,
+            [game_id] INTEGER,
             [visitor] TEXT,
             [visitor_team_id] INTEGER,
             [home] TEXT,
@@ -14,9 +15,7 @@ CREATE_STATEMENT = '''
             [over_line] INTEGER,
             [under_odds] INTEGER,
             [under_line] INTEGER,
-            UNIQUE(game_id)
-        )
-    '''
+            [created] TEXT)'''
 
 
 def create():
@@ -42,15 +41,22 @@ def print_all():
 def insert(game_id, visitor, visitor_team_id, home, home_team_id, over_odds, over_line, under_odds, under_line):
     connection = db.get_database_connection()
     c = connection.cursor()
-    insert_statement = '''
-            INSERT OR REPLACE INTO DK_TOTALS (game_id, visitor, visitor_team_id, home, home_team_id, over_odds, over_line, under_odds, under_line) 
-            VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')
-        '''.format(game_id, visitor, visitor_team_id, home, home_team_id, over_odds, over_line, under_odds, under_line)
+    insert_statement = '''INSERT OR REPLACE INTO DK_TOTALS (game_id, visitor, visitor_team_id, home, home_team_id, 
+    over_odds, over_line, under_odds, under_line, created) 
+            VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')
+        '''.format(game_id, visitor, visitor_team_id, home, home_team_id, over_odds, over_line, under_odds, under_line,
+                   format_time())
     c.execute(insert_statement)
     connection.commit()
 
 
-def import_data():
+def format_time():
+    t = datetime.datetime.now()
+    s = t.strftime('%Y-%m-%d %H:%M:%S.%f')
+    return s[:-3]
+
+
+def import_lines():
     dk_lines = dk.get_game_lines()
     results = dk_lines["draft_kings_result"]
     for result in results:
@@ -70,14 +76,14 @@ def get_total_by_team_ids(visitor_team_id, home_team_id):
 def build_over_under(result):
     if not result:
         return None
-    return overUnder.OverUnder(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8])
+    return overUnder.OverUnder(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10])
 
 
 if __name__ == "__main__":
-    drop()
-    # clear()
-    create()
-    import_data()
+    # drop()
+    clear()
+    #create()
+    #import_lines()
     # get_all()
     print_all()
 
