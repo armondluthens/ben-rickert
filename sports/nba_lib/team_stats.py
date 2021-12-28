@@ -2,6 +2,7 @@ from nba_api.stats.endpoints import leaguestandings as ls
 from nba_api.stats.endpoints import teamyearbyyearstats as team_year_stats
 from nba_api.stats.static import teams as team_stats
 from nba_api.stats.endpoints import teamdashboardbylastngames as td
+from database import nba_teams_table as nba_teams_t
 import statistics
 
 NBA_LEAGUE_ID = "00"
@@ -28,42 +29,41 @@ def get_predicted_point_total(team_1, team_2):
     team_1_dashboard = get_team_dashboard(team_1)
     team_2_dashboard = get_team_dashboard(team_2)
 
-    team_1_5_game_avg = get_average_ppg_5_game(team_1_dashboard)
-    team_1_10_game_avg = get_average_ppg_10_game(team_1_dashboard)
-    team_1_15_game_avg = get_average_ppg_15_game(team_1_dashboard)
-    team_1_20_game_avg = get_average_ppg_20_game(team_1_dashboard)
+    point_avg = get_point_avg(team_1_dashboard, team_2_dashboard)
+    return point_avg
 
-    team_2_5_game_avg = get_average_ppg_5_game(team_2_dashboard)
-    team_2_10_game_avg = get_average_ppg_10_game(team_2_dashboard)
-    team_2_15_game_avg = get_average_ppg_15_game(team_2_dashboard)
-    team_2_20_game_avg = get_average_ppg_20_game(team_2_dashboard)
 
-    avg_5_game = team_1_5_game_avg + team_2_5_game_avg
-    avg_10_game = team_1_10_game_avg + team_2_10_game_avg
-    avg_15_game = team_1_15_game_avg + team_2_15_game_avg
-    avg_20_game = team_1_20_game_avg + team_2_20_game_avg
+def get_point_avg(team_1_dashboard, team_2_dashboard):
+    avg_5_game = get_average_ppg_5_game(team_1_dashboard, team_2_dashboard)
+    avg_10_game = get_average_ppg_10_game(team_1_dashboard, team_2_dashboard)
+    avg_15_game = get_average_ppg_15_game(team_1_dashboard, team_2_dashboard)
+    avg_20_game = get_average_ppg_20_game(team_1_dashboard, team_2_dashboard)
 
     return statistics.mean([avg_5_game, avg_10_game, avg_15_game, avg_20_game])
 
 
-def get_average_ppg_5_game(dashboard):
-    result = dashboard.last5_team_dashboard.data.get("data")[0]
-    return result[POINTS_INDEX] / result[GP_INDEX]
+def get_average_ppg_5_game(team_1_dashboard, team_2_dashboard):
+    team_1 = team_1_dashboard.last5_team_dashboard.data.get("data")[0]
+    team_2 = team_2_dashboard.last5_team_dashboard.data.get("data")[0]
+    return (team_1[POINTS_INDEX] / team_1[GP_INDEX]) + (team_2[POINTS_INDEX] / team_2[GP_INDEX])
 
 
-def get_average_ppg_10_game(dashboard):
-    result = dashboard.last10_team_dashboard.data.get("data")[0]
-    return result[POINTS_INDEX] / result[GP_INDEX]
+def get_average_ppg_10_game(team_1_dashboard, team_2_dashboard):
+    team_1 = team_1_dashboard.last10_team_dashboard.data.get("data")[0]
+    team_2 = team_2_dashboard.last10_team_dashboard.data.get("data")[0]
+    return (team_1[POINTS_INDEX] / team_1[GP_INDEX]) + (team_2[POINTS_INDEX] / team_2[GP_INDEX])
 
 
-def get_average_ppg_15_game(dashboard):
-    result = dashboard.last15_team_dashboard.data.get("data")[0]
-    return result[POINTS_INDEX] / result[GP_INDEX]
+def get_average_ppg_15_game(team_1_dashboard, team_2_dashboard):
+    team_1 = team_1_dashboard.last15_team_dashboard.data.get("data")[0]
+    team_2 = team_2_dashboard.last15_team_dashboard.data.get("data")[0]
+    return (team_1[POINTS_INDEX] / team_1[GP_INDEX]) + (team_2[POINTS_INDEX] / team_2[GP_INDEX])
 
 
-def get_average_ppg_20_game(dashboard):
-    result = dashboard.last20_team_dashboard.data.get("data")[0]
-    return result[POINTS_INDEX] / result[GP_INDEX]
+def get_average_ppg_20_game(team_1_dashboard, team_2_dashboard):
+    team_1 = team_1_dashboard.last20_team_dashboard.data.get("data")[0]
+    team_2 = team_2_dashboard.last20_team_dashboard.data.get("data")[0]
+    return (team_1[POINTS_INDEX] / team_1[GP_INDEX]) + (team_2[POINTS_INDEX] / team_2[GP_INDEX])
 
 
 def get_league_standings():
@@ -109,6 +109,14 @@ def get_all_teams():
         name = team["abbreviation"] + " " + team["nickname"]
         team_tuple_list.append((team_id, name))
     return team_tuple_list
+
+
+def import_team_data():
+    t = nba_teams_t.get_team_id_and_name()
+    for team in t:
+        tid = team[0]
+        team_name = team[1]
+        dashboard = get_team_dashboard(tid)
 
 
 if __name__ == '__main__':

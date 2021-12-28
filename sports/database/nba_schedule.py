@@ -1,21 +1,18 @@
 import database.db as db
-import draftkings.draftkings_client as dk
-import model.OverUnder as overUnder
-import datetime
+import service.game_handler as gh
+import constants.nba_teams as nba_teams
+import util.date_util as du
+# https://www.basketball-reference.com/leagues/NBA_2022_games.html
 
-TABLE = 'DK_TOTALS'
-CREATE_STATEMENT = '''CREATE TABLE DK_TOTALS (
+TABLE = 'NBA_SCHEDULE'
+CREATE_STATEMENT = '''CREATE TABLE NBA_SCHEDULE (
             [event_id] INTEGER PRIMARY KEY AUTOINCREMENT,
-            [game_id] INTEGER,
+            [date] TEXT,
+            [start] TEXT,
             [visitor] TEXT,
             [visitor_team_id] INTEGER,
             [home] TEXT,
-            [home_team_id] INTEGER,
-            [over_odds] INTEGER,
-            [over_line] INTEGER,
-            [under_odds] INTEGER,
-            [under_line] INTEGER,
-            [created] TEXT)'''
+            [home_team_id] INTEGER)'''
 
 
 def create():
@@ -38,53 +35,40 @@ def print_all():
     print(get_all())
 
 
-def insert(game_id, visitor, visitor_team_id, home, home_team_id, over_odds, over_line, under_odds, under_line):
+def insert(date, start, visitor, visitor_team_id, home, home_team_id):
     connection = db.get_database_connection()
     c = connection.cursor()
-    insert_statement = '''INSERT OR REPLACE INTO DK_TOTALS (game_id, visitor, visitor_team_id, home, home_team_id, 
-    over_odds, over_line, under_odds, under_line, created) 
-            VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')
-        '''.format(game_id, visitor, visitor_team_id, home, home_team_id, over_odds, over_line, under_odds, under_line,
-                   format_time())
+    insert_statement = '''INSERT OR REPLACE INTO NBA_SCHEDULE (date, start, visitor, visitor_team_id, home, 
+    home_team_id) VALUES ('{}', '{}', '{}', {}, '{}', {})
+        '''.format(date, start, visitor, visitor_team_id, home, home_team_id)
     c.execute(insert_statement)
     connection.commit()
 
 
-def format_time():
-    t = datetime.datetime.now()
-    s = t.strftime('%Y-%m-%d %H:%M:%S.%f')
-    return s[:-3]
+def import_schedule():
+    schedule = gh.get_schedule()
+    count = 0
+    for game in schedule:
+        if count > 0:
+            insert(str(game[0]), str(game[1]), game[2], nba_teams.get_team_id(game[2]), game[4],
+                   nba_teams.get_team_id(game[4]))
+        count += 1
 
 
-def import_lines():
-    dk_lines = dk.get_game_lines()
-    results = dk_lines["draft_kings_result"]
-    for result in results:
-        total = result["total"]
-        if total and result:
-            insert(result["game_id"], result["visitor"], result["visitor_team_id"], result["home"], result["home_team_id"],
-                   total["over"]["odds"], total["over"]["line"], total["under"]["odds"], total["under"]["line"])
-
-
-def get_total_by_team_ids(visitor_team_id, home_team_id):
-    query = "SELECT * FROM {} WHERE visitor_team_id={} AND home_team_id={} LIMIT 1;"\
-        .format(TABLE, visitor_team_id, home_team_id)
-    result = db.select_single_row(query)
-    return build_over_under(result)
-
-
-def build_over_under(result):
-    if not result:
-        return None
-    return overUnder.OverUnder(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10])
+def get_games(offset):
+    query = "SELECT visitor_team_id, home_team_id FROM NBA_SCHEDULE WHERE date = '{}';".format(du.get_day(offset))
+    return db.select_multi_rows(query)
+    # games = []
+    # for game in results:
+    #     games.append((game[0], game[1]))
+    # return games
 
 
 if __name__ == "__main__":
+    print(get_games(1))
     # drop()
-    clear()
-    #create()
-    #import_lines()
+    # clear()
+    # create()
+    # import_schedule()
     # get_all()
-    print_all()
-
-
+    # print_all()

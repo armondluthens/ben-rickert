@@ -11,3 +11,8 @@ def get_tomorrow():
     today_ts = datetime.datetime.now()
     tomorrow_ts = today_ts + one_day
     return str(tomorrow_ts.strftime("%a %b %-d %Y"))
+
+
+def get_day(offset):
+    ts = datetime.datetime.now() + datetime.timedelta(days=offset)
+    return str(ts.strftime("%a %b %-d %Y"))

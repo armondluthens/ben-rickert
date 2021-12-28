@@ -73,6 +73,22 @@ def get_all():
     return db.get_all(TABLE)
 
 
+def get_team_id_and_name():
+    t = []
+    teams = get_all()
+    for team in teams:
+        t.append((team[0], team[1]))
+    return t
+
+
+def get_team_ids():
+    team_ids = []
+    teams = get_all()
+    for team in teams:
+        team_ids.append(team[0])
+    return team_ids
+
+
 def print_all():
     print(get_all())
 

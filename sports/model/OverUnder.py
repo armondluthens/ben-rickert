@@ -1,5 +1,5 @@
 class OverUnder:
-    def __init__(self, game_id, visitor, visitor_id, home, home_id, over_odds, over_line, under_odds, under_line):
+    def __init__(self, event_id, game_id, visitor, visitor_id, home, home_id, over_odds, over_line, under_odds, under_line, created):
         self.game_id = game_id
         self.visitor = visitor
         self.visitor_id = visitor_id

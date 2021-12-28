@@ -4,6 +4,8 @@ import database.nba_teams_table as nba_teams_t
 
 DK_NBA_API = "https://sportsbook-us-nj.draftkings.com//sites/US-NJ-SB/api/v4/eventgroups/88670846?format=json"
 
+#DK_NBA_API = "https://sportsbook-us-nj.draftkings.com/sites/US-NJ-SB/api/v4/eventgroups/88670846/categories/487?format=json"
+
 
 def draftkings_api():
     dk_api_result = requests.get(DK_NBA_API).json().get("eventGroup") \
@@ -87,7 +89,7 @@ def get_visitor_team_id(game):
         visitor_spread = spread_outcomes[0]
         team_name = visitor_spread["label"]
         team = nba_teams_t.get_team_by_dk_name(team_name)
-        return team[0]
+        return team[0] if team else None
 
 
 def get_visitor_team_name(game):
@@ -97,7 +99,7 @@ def get_visitor_team_name(game):
         home_spread = spread_outcomes[0]
         team_name = home_spread["label"]
         team = nba_teams_t.get_team_by_dk_name(team_name)
-        return team[1]
+        return team[1] if team else None
 
 
 def get_home_team_id(game):
@@ -107,7 +109,7 @@ def get_home_team_id(game):
         home_spread = spread_outcomes[1]
         team_name = home_spread["label"]
         team = nba_teams_t.get_team_by_dk_name(team_name)
-        return team[0]
+        return team[0] if team else None
 
 
 def get_home_team_name(game):
@@ -117,7 +119,7 @@ def get_home_team_name(game):
         home_spread = spread_outcomes[1]
         team_name = home_spread["label"]
         team = nba_teams_t.get_team_by_dk_name(team_name)
-        return team[1]
+        return team[1] if team else None
 
 
 def build_game_result(game):
